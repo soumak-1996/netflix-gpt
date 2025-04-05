@@ -1,11 +1,20 @@
-import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./userSlice";
 import moviesReducer from "./moviesSlice";
 import storage from "redux-persist/lib/storage";
-import { PersistConfig, persistReducer } from "redux-persist";
 import { combineReducers } from "@reduxjs/toolkit";
 import GPTReducer from "./GPTSlice";
 import configReducer from "./configSlice";
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER
+} from 'redux-persist';
 const persistConfig = {
   key: 'root',
   version : 1,
@@ -22,7 +31,13 @@ const reducer = combineReducers(
 const persistedReducer = persistReducer(persistConfig,reducer);
 const appStore = configureStore(
     {
-        reducer : persistedReducer
+        reducer : persistedReducer,
+        middleware: getDefaultMiddleware({
+          serializableCheck: {
+            // Ignore redux-persist action types
+            ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+          },
+        }),
     }
 )
 export default appStore;

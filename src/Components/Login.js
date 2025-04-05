@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState,useEffect } from 'react';
 import Header from './Header';
 import {validateSignInData} from '../utils/validate';
 import {createUserWithEmailAndPassword, signInWithEmailAndPassword,updateProfile } from "firebase/auth";
@@ -17,6 +17,11 @@ const Login = () => {
   const handleSignIn = () => {
     setIsSignInForm(!isSignInForm);
   }
+  useEffect(()=>{
+    if (email.current) email.current.value = '';
+    if (name.current) name.current.value = '';
+    if (password.current) password.current.value = '';
+  },[isSignInForm]);
   const handleButtonClick = () =>
   {
     //Validate form data
@@ -75,7 +80,7 @@ const Login = () => {
         <input type='password' ref={password} placeholder='Password' className='m-4 p-2 w-10/12 rounded-lg bg-gray-600 text-white'/>
         {<p className='text-red-400 px-2 mx-4 text-lg'>{errorMessage}</p>}
         <button type="submit" className='bg-red-800 rounded-lg p-2 m-4 text-white w-10/12' onClick={handleButtonClick}> {isSignInForm ?  "Sign In" : "Sign up" }</button>
-        <p className='text-white p-2 m-4 hover:scale-110 cursor-pointer' onClick={handleSignIn}>{!isSignInForm ?  "ALready a user? Sign in now." : "New to Netflix? Sign up now." }</p>
+        <p className='text-white p-2 m-4 hover:scale-110 cursor-pointer' onClick={handleSignIn}>{!isSignInForm ?  "Already a user? Sign in now." : "New to Netflix? Sign up now." }</p>
         
     </form> 
     </div>   
